@@ -1,0 +1,49 @@
+List,w1,w2,w3,shape_match,categ_match
+1,bowling ball,coconut,banana,1-2,2-3
+1,apple,bowling ball,tennis racket,1-2,2-3
+1,bowling ball,orange,pear,1-2,2-3
+1,button,cucumber slice,toast,1-2,2-3
+1,cucumber slice,wall clock,TV screen,1-2,2-3
+1,TV screen,toast,pear,1-2,2-3
+1,clarinet,banana,pear,1-2,2-3
+1,paint can,drum,flute,1-2,2-3
+1,drum,cake,pear,1-2,2-3
+1,flashlight,banana,cake,1-2,2-3
+1,wall clock,pizza pie,coconut,1-2,2-3
+1,button,pizza pie,toast,1-2,2-3
+1,soda can,hairspray,comb,1-2,2-3
+1,bamboo,flute,trumpet,1-2,2-3
+1,pear,violin,drum,1-2,2-3
+1,clarinet,flashlight,lamp,1-2,2-3
+1,banana,paintbrush,paint can,1-2,2-3
+1,paintbrush,flute,violin,1-2,2-3
+1,flute,banana,apple,1-2,2-3
+1,apple,soccerball,tennis racket,1-2,2-3
+1,soccerball,orange,banana,1-2,2-3
+1,button,wall clock,hourglass,1-2,2-3
+1,hourglass,violin,piano,1-2,2-3
+1,flashlight,flute,piano,1-2,2-3
+2,tennis ball,onion,carrot,1-2,2-3
+2,cucumber,pencil,paper,1-2,2-3
+2,chopsticks,cucumber,onion,1-2,2-3
+2,bucket,cup,plate,1-2,2-3
+2,basketball,onion,cucumber,1-2,2-3
+2,cookie,plate,spoon,1-2,2-3
+2,pen,cucumber,tomato,1-2,2-3
+2,shovel,spoon,cup,1-2,2-3
+2,chopsticks,ski,spoon,1-2,2-3
+2,wheel,cookie,icecream cone,1-2,2-3
+2,umbrella,broccoli,onion,1-2,2-3
+2,basketball,peach,mushroom,1-2,2-3
+2,tennis ball,peach,cucumber,1-2,2-3
+2,pencil,chopsticks,spoon,1-2,2-3
+2,chopsticks,pen,paper,1-2,2-3
+2,wheel,plate,chopsticks,1-2,2-3
+2,basketball,tomato,carrot,1-2,2-3
+2,umbrella,mushroom,tomato,1-2,2-3
+2,cigarette,cucumber,broccoli,1-2,2-3
+2,pen,carrot,mushroom,1-2,2-3
+2,icecream cone,microphone,headphones,1-2,2-3
+2,spoon,microphone,computer monitor,1-2,2-3
+2,rainbow,headphones,computer monitor,1-2,2-3
+2,shovel,lollipop,candy,1-2,2-3
