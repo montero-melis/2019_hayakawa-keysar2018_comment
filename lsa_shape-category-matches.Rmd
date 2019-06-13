@@ -199,7 +199,7 @@ in lots of html markup, so let's remove it:
 # Unwieldy regex, but does the job. We are matching the whole line, while
 # capturing the info that interests us in parentheses; this allows us to
 # substitute the whole string with just the relevant info using backreferences
-# (the "\\1" bits). Note that we need to take into account that:
+# (e.g., "\\1"). Note that we need to take into account that:
 # 1) The target word sometimes consists of two words ("TV screen");
 # 2) Some cosine similarities are NA (marked as "N/A") because the word isn't
 #    in the corpus.
@@ -224,19 +224,100 @@ cosines <- left_join(cosines, lsa_clean)
 head(cosines)
 ```
 
+There are `r sum(is.na(cosines$cosine))` NAs
+(or `r round(100 * sum(is.na(cosines$cosine)) / nrow(cosines) )`%
+of the word pairs).
+
+
+
+Add cosine distances computed by Jeroen van Paridon
+==================================================
+
+These were computed using the sub2vec approach, which combines the state-of-the-art
+word2vec algorithms with the data from SUBTLEX-US.
+
+```{r}
+cosine_s2v <- read.delim("exp2_stimuli_with_cosine_sub2vec.tsv",
+                         stringsAsFactors = FALSE, row.names = 1) %>%
+  rename(match_type = condition, cosine_s2v = cosine.similarity)
+head(cosine_s2v)
+```
+
+There are `r sum(is.na(cosine_s2v$cosine.similarity))` NAs
+(or `r round(100 * sum(is.na(cosine_s2v$cosine.similarity)) / nrow(cosine_s2v) )`%
+of the word pairs).
+
+
+```{r}
+# transform so we can join it with cosines
+cosine_s2v$word_pair <- ""
+cosine_s2v[cosine_s2v$match_type == "shape", "word_pair"] <-
+  with(cosine_s2v[cosine_s2v$match_type == "shape", ], paste(w1, w2, sep = " - "))
+cosine_s2v[cosine_s2v$match_type == "category", "word_pair"] <-
+  with(cosine_s2v[cosine_s2v$match_type == "category", ], paste(w2, w3, sep = " - "))
+```
+
+```{r}
+# join
+cosines <- left_join(cosines, cosine_s2v %>% select(word_pair, match_type, cosine_s2v))
+head(cosines)
+```
+
+
+
 
 Plot the result
 ===============
 
+Correlation between cosine similarity from LSA and Sub2vec
+
+```{r}
+ggplot(cosines, aes(x = cosine, y = cosine_s2v)) +
+  geom_point(aes(colour = match_type)) +
+  geom_smooth(method = "lm") +
+  xlab("cosine similarity from LSA") +
+  theme_classic()
+```
+
+```{r, fig.width=9, fig.height=5}
+ggplot(cosines, aes(x = cosine, y = cosine_s2v, colour = match_type,
+                    label = word_pair)) +
+  # geom_point() +
+  geom_text() +
+  geom_smooth(method = "lm") +
+  xlab("cosine similarity from LSA") +
+  theme_classic()
+```
+
+
+
+Simple dot plot with CIs
+------------------------
+
 ```{r, fig.width=4, fig.height=5}
 ggplot(cosines, aes(x = match_type, y = cosine)) +
   stat_summary(fun.data = mean_cl_boot, geom = "errorbar", colour = "red",
-               width = .2, size = 2) + 
+               width = .2, size = 2) +
   geom_jitter(height = 0, width = .2, alpha = .3) +
   xlab("Type of match") +
   ylab("Cosine similarity") +
+  ggtitle("LSA") +
   theme_classic()
+
+ggplot(cosines, aes(x = match_type, y = cosine_s2v)) +
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", colour = "red",
+               width = .2, size = 2) +
+  geom_jitter(height = 0, width = .2, alpha = .3) +
+  xlab("Type of match") +
+  ylab("Cosine similarity") +
+  ggtitle("Sub2vec") +
+  theme_classic()
+
 ```
+
+
+Plotting word pairs
+-------------------
 
 Showing the word pairs instead of simple points:
 
@@ -247,38 +328,71 @@ ggplot(cosines, aes(x = match_type, y = cosine, label = word_pair, colour = matc
   geom_label(position = position_jitter(width = .4, height = .01)) +
   xlab("Type of match") +
   ylab("Cosine similarity") +
+  ggtitle("LSA") +
+  theme_classic() +
+  theme(legend.position="none")
+
+ggplot(cosines, aes(x = match_type, y = cosine_s2v, label = word_pair, colour = match_type)) +
+  # geom_jitter(height = 0, width = .2, alpha = .3) +
+  geom_label(position = position_jitter(width = .4, height = .01)) +
+  xlab("Type of match") +
+  ylab("Cosine similarity") +
+  ggtitle("Sub2vec") +
   theme_classic() +
   theme(legend.position="none")
 ```
 
+
+Plot labels for extreme values only
+----------------------------------
+
 It might be nice to label only the more extreme points:
 
-```{r, fig.height=7, fig.width=8, warning=FALSE}
+
+```{r}
+# Create the labels for extreme points -- note these differ depending on
+# LSA vs sub2vec!
 # Labels for extreme values
-cosines$Labels <- cosines$word_pair
-cosines$Labels[with(cosines,
-                    match_type == "category" &
-                      ! (cosine <= .05 | cosine > .65) )] <- NA
-cosines$Labels[with(cosines,
-                    match_type == "shape" &
-                      ! (cosine <= .005 | cosine > .35) )] <- NA
+# LSA
+cosines$Labels_lsa <- cosines$word_pair
+cosines$Labels_lsa[with(cosines,
+                        match_type == "category" &
+                          ! (cosine <= .05 | cosine > .65) )] <- NA
+cosines$Labels_lsa[with(cosines,
+                        match_type == "shape" &
+                          ! (cosine <= .005 | cosine > .35) )] <- NA
+# sub2vec
+cosines$Labels_s2v <- cosines$word_pair
+cosines$Labels_s2v[with(cosines,
+                        match_type == "category" &
+                          ! (cosine_s2v <= .35 | cosine_s2v > .65) )] <- NA
+cosines$Labels_s2v[with(cosines,
+                        match_type == "shape" &
+                          ! (cosine_s2v <= .17 | cosine_s2v > .35) )] <- NA
+```
+
+Plot
+
+```{r, fig.height=7, fig.width=8, warning=FALSE}
 # plot with labels
-ggplot(cosines, aes(x = match_type, y = cosine, label = Labels)) +
+ggplot(cosines, aes(x = match_type, y = cosine, label = Labels_lsa)) +
   stat_summary(fun.data = mean_cl_boot, geom = "errorbar", colour = "red",
-               width = .2, size = 2) + 
+               width = .2, size = 2) +
   geom_jitter(height = 0, width = .2, alpha = .3) +
   geom_text_repel() +
   xlab("Type of match") +
   ylab("Cosine similarity") +
+  ggtitle("LSA") +
   theme_classic()
-# plot with labels
-ggplot(cosines, aes(x = match_type, y = cosine, label = Labels)) +
+
+ggplot(cosines, aes(x = match_type, y = cosine_s2v, label = Labels_s2v)) +
   stat_summary(fun.data = mean_cl_boot, geom = "errorbar", colour = "red",
-               width = .2, size = 2) + 
+               width = .2, size = 2) +
   geom_jitter(height = 0, width = .2, alpha = .3) +
-  geom_label_repel() +
+  geom_text_repel() +
   xlab("Type of match") +
   ylab("Cosine similarity") +
+  ggtitle("Sub2vec") +
   theme_classic()
 ```
 
