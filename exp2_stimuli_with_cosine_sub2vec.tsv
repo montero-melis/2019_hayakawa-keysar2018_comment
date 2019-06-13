@@ -1,0 +1,97 @@
+	w1	w2	w3	condition	cosine similarity
+0	bowling ball	coconut	banana	category	0.7138868895506814
+1	apple	bowling ball	tennis racket	category	
+2	bowling ball	orange	pear	category	0.37063158792686723
+3	button	cucumber slice	toast	category	
+4	cucumber slice	wall clock	TV screen	category	
+5	TV screen	toast	pear	category	0.3019101225623231
+6	clarinet	banana	pear	category	0.5484573393973017
+7	paint can	drum	flute	category	0.48707152312571034
+8	drum	cake	pear	category	0.433360399782875
+9	flashlight	banana	cake	category	0.4559177408269832
+10	wall clock	pizza pie	coconut	category	
+11	button	pizza pie	toast	category	
+12	soda can	hairspray	comb	category	0.32604444927191256
+13	bamboo	flute	trumpet	category	0.7271043419535903
+14	pear	violin	drum	category	0.37363823768183035
+15	clarinet	flashlight	lamp	category	0.5699955329833524
+16	banana	paintbrush	paint can	category	
+17	paintbrush	flute	violin	category	0.7637865083407699
+18	flute	banana	apple	category	0.4890391352228949
+19	apple	soccerball	tennis racket	category	
+20	soccerball	orange	banana	category	0.3870686151054543
+21	button	wall clock	hourglass	category	
+22	hourglass	violin	piano	category	0.8036490496919008
+23	flashlight	flute	piano	category	0.6619008686399861
+24	tennis ball	onion	carrot	category	0.6026667701569332
+25	cucumber	pencil	paper	category	0.5507647035781291
+26	chopsticks	cucumber	onion	category	0.6391965597675634
+27	bucket	cup	plate	category	0.32303076912250195
+28	basketball	onion	cucumber	category	0.6391965597675634
+29	cookie	plate	spoon	category	0.40578880550695184
+30	pen	cucumber	tomato	category	0.7350946086525455
+31	shovel	spoon	cup	category	0.3941948161913573
+32	chopsticks	ski	spoon	category	0.17370601746266368
+33	wheel	cookie	icecream cone	category	
+34	umbrella	broccoli	onion	category	0.5515553194976484
+35	basketball	peach	mushroom	category	0.4465561900706416
+36	tennis ball	peach	cucumber	category	0.49479077359741097
+37	pencil	chopsticks	spoon	category	0.6180392807863856
+38	chopsticks	pen	paper	category	0.4175460766527661
+39	wheel	plate	chopsticks	category	0.36049983945967856
+40	basketball	tomato	carrot	category	0.6898919396565824
+41	umbrella	mushroom	tomato	category	0.5363562358511601
+42	cigarette	cucumber	broccoli	category	0.6143507496612295
+43	pen	carrot	mushroom	category	0.49499810211676765
+44	icecream cone	microphone	headphones	category	0.7571174954661499
+45	spoon	microphone	computer monitor	category	
+46	rainbow	headphones	computer monitor	category	
+47	shovel	lollipop	candy	category	0.6041149277841182
+48	bowling ball	coconut	banana	shape	
+49	apple	bowling ball	tennis racket	shape	
+50	bowling ball	orange	pear	shape	
+51	button	cucumber slice	toast	shape	
+52	cucumber slice	wall clock	TV screen	shape	
+53	TV screen	toast	pear	shape	
+54	clarinet	banana	pear	shape	0.1972114707380923
+55	paint can	drum	flute	shape	
+56	drum	cake	pear	shape	0.24335434958458735
+57	flashlight	banana	cake	shape	0.22129174444196087
+58	wall clock	pizza pie	coconut	shape	
+59	button	pizza pie	toast	shape	
+60	soda can	hairspray	comb	shape	
+61	bamboo	flute	trumpet	shape	0.3420794420409585
+62	pear	violin	drum	shape	0.2634897200749151
+63	clarinet	flashlight	lamp	shape	0.2555969682697793
+64	banana	paintbrush	paint can	shape	0.17223892696178011
+65	paintbrush	flute	violin	shape	0.2617122310238389
+66	flute	banana	apple	shape	0.19996074252827478
+67	apple	soccerball	tennis racket	shape	
+68	soccerball	orange	banana	shape	
+69	button	wall clock	hourglass	shape	
+70	hourglass	violin	piano	shape	0.267321090809568
+71	flashlight	flute	piano	shape	0.20307910959488895
+72	tennis ball	onion	carrot	shape	
+73	cucumber	pencil	paper	shape	0.2134371498643678
+74	chopsticks	cucumber	onion	shape	0.36542522776250275
+75	bucket	cup	plate	shape	0.3039675201905714
+76	basketball	onion	cucumber	shape	0.11330439171281426
+77	cookie	plate	spoon	shape	0.2731816269533168
+78	pen	cucumber	tomato	shape	0.22773391669351106
+79	shovel	spoon	cup	shape	0.5171301953495705
+80	chopsticks	ski	spoon	shape	0.17520111865846966
+81	wheel	cookie	icecream cone	shape	0.19118531710609976
+82	umbrella	broccoli	onion	shape	0.18949476724727754
+83	basketball	peach	mushroom	shape	0.16782794035597315
+84	tennis ball	peach	cucumber	shape	
+85	pencil	chopsticks	spoon	shape	0.4149636592821846
+86	chopsticks	pen	paper	shape	0.3459790153706792
+87	wheel	plate	chopsticks	shape	0.32194671233085914
+88	basketball	tomato	carrot	shape	0.13902108343616426
+89	umbrella	mushroom	tomato	shape	0.24255589963230517
+90	cigarette	cucumber	broccoli	shape	0.2238145209283251
+91	pen	carrot	mushroom	shape	0.21904070034466416
+92	icecream cone	microphone	headphones	shape	
+93	spoon	microphone	computer monitor	shape	0.3248238709320984
+94	rainbow	headphones	computer monitor	shape	0.17460583853233025
+95	shovel	lollipop	candy	shape	0.2870221879939032
