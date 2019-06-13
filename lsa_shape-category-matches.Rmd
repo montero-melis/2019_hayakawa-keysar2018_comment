@@ -238,7 +238,20 @@ ggplot(cosines, aes(x = match_type, y = cosine)) +
   theme_classic()
 ```
 
-It might be nice to label some of the more extreme points:
+Showing the word pairs instead of simple points:
+
+```{r, fig.width=7, fig.height=8}
+# plot with labels
+ggplot(cosines, aes(x = match_type, y = cosine, label = word_pair, colour = match_type)) +
+  # geom_jitter(height = 0, width = .2, alpha = .3) +
+  geom_label(position = position_jitter(width = .4, height = .01)) +
+  xlab("Type of match") +
+  ylab("Cosine similarity") +
+  theme_classic() +
+  theme(legend.position="none")
+```
+
+It might be nice to label only the more extreme points:
 
 ```{r, fig.height=7, fig.width=8, warning=FALSE}
 # Labels for extreme values
@@ -258,5 +271,18 @@ ggplot(cosines, aes(x = match_type, y = cosine, label = Labels)) +
   xlab("Type of match") +
   ylab("Cosine similarity") +
   theme_classic()
+# plot with labels
+ggplot(cosines, aes(x = match_type, y = cosine, label = Labels)) +
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", colour = "red",
+               width = .2, size = 2) + 
+  geom_jitter(height = 0, width = .2, alpha = .3) +
+  geom_label_repel() +
+  xlab("Type of match") +
+  ylab("Cosine similarity") +
+  theme_classic()
 ```
+
+
+
+
 
