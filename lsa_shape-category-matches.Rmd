@@ -14,16 +14,16 @@ output:
 Introduction
 ============
 
-As part of a critical comment on Hayakawa & Keysar (2018 in *Cognition*), we
-want to make the point that assuming that the shape task and the category task
-in their Experiment 2 require the "same level of knowledge of the language" 
-(p. 11) is problematic. One reason for this is that simple co-occurrence
+As part of a critical comment on Hayakawa & Keysar (2018 in *Cognition*), we want
+to show that it is problematic to assume that the shape task and the category
+task in their Experiment 2 require the "same level of knowledge of the language" 
+(p. 11). One reason for this is that simple co-occurrence / distributional
 patterns of words are predictive of semantic similarity, and thus category
-similarity, but not of shape similarity. To illustrate this point I wanted
+similarity, but not of shape similarity. To illustrate this point I want
 to plot the cosine similarity computed using Latent Semantic Analysis (LSA)
 for the shape vs category matches.
-LSA is not really state-of-the-art anymore, but it's sufficient to make the
-point -- and it has an online tool that can be used by anyone.
+LSA is not really state-of-the-art anymore, but it might be sufficient to make
+our point -- and it has an online tool that can easily be used.
 
 
 ```{r setup, include=FALSE}
@@ -54,12 +54,16 @@ a row in the data set:
 head(stim) %>% kable
 ```
 
-There were two lists with different words, each consisting of 24 trials.
-
 Remarks:
 
+- There were two lists with different words, each consisting of 24 trials.
+For each participant, one list was used for the critical shape and category
+tasks (the same 24 items per task, so that task was manipulated within subjects
+and items), while the other was used for a control task (the "picture" task,
+see HK18, p.11).
 - For each triad, the first two words always constitute the shape match and
-the last two words the category match.
+the last two words the category match (this is also indicated in the two columns
+``r names(stim)[5]`` and ``r names(stim)[6]``).
 - Note that some of the words are repeated across trials, e.g. "TV screen" is
 a category match with "wall clock" on row 5, but it is a shape match with
 "toast" on row 6.
@@ -68,7 +72,7 @@ a category match with "wall clock" on row 5, but it is a shape match with
 Save stimuli to right format for LSA
 ------------------------------------
 
-We want to create a text file that has the required format to use with the
+We want to create a text file that has the required format for the
 [online LSA tool](http://lsa.colorado.edu/cgi-bin/LSA-pairwise.html) we will use.
 
 Word pairs for which we want to compute pairwise cosine distance need to follow
@@ -106,10 +110,11 @@ It should look something like this:
 
 After clicking "Submit Texts", the output is the following webbage:
 
-![LSA: output screen](screenshots/LSA-2.png)
+![LSA: output screen (first five pairwise comparisons shown)](screenshots/LSA-2.png)
 
 For each consecutive pair of words there is a cosine distance. This html file
-has been saved to the repository as "LSA_output_raw-html.html".
+has been saved to the repository as "LSA_output_raw-html.html". The next step
+is to extract the cosine values for each comparison.
 
 
 
@@ -123,7 +128,7 @@ format, i.e. into a tabular format.
 ### Define the format we want to achieve
 
 First, let's create a dataframe with the right format but without the cosine
-distances (these we'll add later).
+distances (these we'll add in the next step).
 
 ```{r}
 # Put shape matches and category matches into one column each
@@ -143,32 +148,32 @@ tail(cosines, 3)
 ```
 
 
-### Get the important info from html file
+### Extract the important info from html file
 
-I will apply a brute force approach, reading the html file as text and using
-REGEX. (R packages such as `XML` might do this in a more structured way but I
-don't know how to use them and for our purposes, regex will do the job.)
+I will apply a bit of a brute force approach: We'll read the html file as text
+and use REGEX to extract the actual results. (R packages such as `XML` might do
+this in a more structured way but for our purposes, REGEX will do the job.)
 
-First, read the html file line-by-line and put into a data frame consisting of
-one single column.
+First, read the html file line-by-line and put it into a data frame of one
+single column.
 
 ```{r}
 lsa_out <- read.delim("LSA_output_raw-html.html", header = FALSE, sep = ",",
-                          col.names = "text", stringsAsFactors = FALSE)
+                      col.names = "text", stringsAsFactors = FALSE)
 # Note that by using sep = "," we're making sure each line in the file becomes
 # one line in our data frame
-# head(lsa_out)
+head(lsa_out)
 ```
 
-Inspecting the html (in a separate text editor like SublimeText), we see which
-rows contain the crucial information, that is, either the words that were
-compared or their cosine similarity:
-These happen to be all the rows that contain the word "align" in them because
-the crucial information appears in a table format.
+Inspecting the html (in a separate text editor like SublimeText), we can easily
+identify which rows contain the crucial information, that is, the words that were
+compared or their cosine similarity: These happen to be all the rows that contain
+the word "align" in them (because the crucial information appears in a table
+format). So let's use this to select only relevant rows.
 
 ```{r}
-# (NB: Using the pipes with dplyr makes sureusing the pipes with dplyr ensures
-# the result is not turned from a dataframe into a vector)
+# NB: Using the pipes with dplyr ensures the result is not turned from a 
+# dataframe into a vector
 lsa_out <- lsa_out %>%
   filter(grepl("align", text))
 head(lsa_out)
@@ -185,23 +190,28 @@ rm(odd_rows, lsa_comb)
 ```
 
 
-This is already some progress. Now let's remove all the unnecessary markup:
+This is already some progress: the information for each comparison (i.e., the
+two words and their cosine distance) is in one separate row. Only it is buried
+in lots of html markup, so let's remove it:
 
 
 ```{r}
-# Messy regex, but does the job. Note that we need to take into account:
+# Unwieldy regex, but does the job. We are matching the whole line, while
+# capturing the info that interests us in parentheses; this allows us to
+# substitute the whole string with just the relevant info using backreferences
+# (the "\\1" bits). Note that we need to take into account that:
 # 1) The target word sometimes consists of two words ("TV screen");
-# 2) Some cosine similarities are NA (marked as "N/A") if the word isn't there.
-
+# 2) Some cosine similarities are NA (marked as "N/A") because the word isn't
+#    in the corpus.
 lsa_clean <- gsub(".*xts.*ER> ([A-Za-z]+ ?[A-Za-z]*)  .*ER> ([A-Za-z]+ ?[A-Za-z]*)<.*([0-9]\\.[0-9]+|N/A)$",
                   "\\2 - \\1,\\3", lsa_combined, perl = TRUE)
-# Note that we need to replace the 1st and 2nd word in reversed order to match
-# the original order (simply a consequence of how html of tables is parsed but
-# the cosine(A,B) = cosine(B,A) so it doesn't matter)
+# We replace the 1st and 2nd word in reversed order to match the original order
+# (simply a consequence of how html of tables is parsed but of course 
+# cosine(A,B) = cosine(B,A) so it doesn't matter).
 lsa_clean <- data.frame(collapsed = lsa_clean) %>%
   separate(collapsed, c("word_pair", "cosine"), ",")
 lsa_clean$cosine <- as.numeric(lsa_clean$cosine)
-# head(lsa_clean)
+head(lsa_clean)
 ```
 
 
@@ -218,26 +228,35 @@ head(cosines)
 Plot the result
 ===============
 
-```{r}
+```{r, fig.width=4, fig.height=5}
 ggplot(cosines, aes(x = match_type, y = cosine)) +
-  geom_jitter(height = 0, width = .1)
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", colour = "red",
+               width = .2, size = 2) + 
+  geom_jitter(height = 0, width = .2, alpha = .3) +
+  xlab("Type of match") +
+  ylab("Cosine similarity") +
+  theme_classic()
 ```
 
+It might be nice to label some of the more extreme points:
 
-```{r, fig.height=7, fig.width=8}
+```{r, fig.height=7, fig.width=8, warning=FALSE}
 # Labels for extreme values
 cosines$Labels <- cosines$word_pair
 cosines$Labels[with(cosines,
                     match_type == "category" &
-                      ! (cosine <= .15 | cosine > .6) )] <- NA
+                      ! (cosine <= .05 | cosine > .65) )] <- NA
 cosines$Labels[with(cosines,
                     match_type == "shape" &
-                      ! (cosine <= .01 | cosine > .3) )] <- NA
+                      ! (cosine <= .005 | cosine > .35) )] <- NA
 # plot with labels
 ggplot(cosines, aes(x = match_type, y = cosine, label = Labels)) +
-  geom_jitter(height = 0, width = .05) +
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", colour = "red",
+               width = .2, size = 2) + 
+  geom_jitter(height = 0, width = .2, alpha = .3) +
   geom_text_repel() +
-  ylim(-.01, .85) +
-  theme_bw()
+  xlab("Type of match") +
+  ylab("Cosine similarity") +
+  theme_classic()
 ```
 
