@@ -5,6 +5,7 @@
 # html files (but for exceptions)
 *.html
 !LSA_output_raw-html.html
+!lsa_shape-category-matches.html
 
 
 
